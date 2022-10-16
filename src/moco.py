@@ -4,6 +4,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from src.model import build_model
+
 
 class MoCo(nn.Module):
     """
@@ -211,3 +213,26 @@ class MoCo(nn.Module):
         self._dequeue_and_enqueue(keys=out_k, file_idxs=file_idxs)
 
         return logits, labels
+
+
+def build_moco(args):
+    encoder = build_model(
+        arch=args.arch,
+        n_classes=args.dim_moco,
+        mlp_head=True,
+    )
+
+    moco = MoCo(
+        encoder=encoder,
+        dim=args.dim_moco,
+        K=args.k_moco,
+        m=args.m_moco,
+        T=args.t_moco,
+        n_hard=args.n_hard,
+        s1_hard=args.s1_hard, 
+        s2_hard=args.s2_hard,
+        start1_hard=args.start1_hard,
+        start2_hard=args.start2_hard,    
+    )
+    
+    return moco
