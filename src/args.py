@@ -5,12 +5,17 @@ def parse_args():
 
     parser = argparse.ArgumentParser()
 
+    # DATA
     parser.add_argument(
         '--root', '-r', type=str, default='dataset',
         help='Directory where the dataset will be stored.')
     parser.add_argument(
+        '--out', '-o', type=str, default='dataset',
+        help='Directory where the output will be stored.')
+    parser.add_argument(
         '--img_size', '-i', type=int, default=224,
         help='Image resolution.')
+    # TRAINING
     parser.add_argument(
         '--steps', '-s', type=int, default=50000,
         help='Number of training steps.')
@@ -27,8 +32,28 @@ def parse_args():
         '--seed', '-se', type=int, default=69420,
         help='Seed for reproducibility.')
     parser.add_argument(
+        '--device', '-d', type=int, default=None,
+        help='GPU id. If cuda is available default is gpu 0, else cpu.')
+    parser.add_argument(
+        '--lr_base', '-lrb', type=float, default=4e-4,
+        help='Base learning rate.')
+    parser.add_argument(
+        '--lr_warmup', '-lrw', type=float, default=5e-7,
+        help='Warmup learning rate.')
+    parser.add_argument(
+        '--lr_min', '-lrm', type=float, default=5e-6,
+        help='Min learning rate.')
+    parser.add_argument(
+        '--clip_grad', '-cg', type=float, default=5.0,
+        help='Clip grad.')
+
+    # MODEL
+    parser.add_argument(
         '--arch', '-a', type=str, default='efficientnet_b2',
         help='Architecture of timm model.')
+    parser.add_argument(
+        '--resume', '-r', type=str, default=None,
+        help='Path to checkpoint.')
     parser.add_argument(
         '--dim_moco', '-dm', type=int, default=128,
         help='Output dimension for MoCo.')

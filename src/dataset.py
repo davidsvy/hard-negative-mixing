@@ -26,7 +26,7 @@ class Dataset_Contrastive(torchvision.datasets.Caltech256):
         return image, idx
 
 
-def loader_contrastive(args):
+def build_loader(args):
 
     transform = transform_inner_train(crop_size=args.img_size)
 
