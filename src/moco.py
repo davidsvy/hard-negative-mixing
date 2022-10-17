@@ -29,8 +29,8 @@ class MoCo(nn.Module):
             n_hard (int): Number of most difficult negatives to consider for each query.
             s1_hard (int): Number of type 1 synthetic negatives to create for each query.
             s2_hard (int): Number of type 2 synthetic negatives to create for each query.
-            start1_hard (int): Step when nexative mixing type 1 begins.
-            start2_hard (int): Step when nexative mixing type 2 begins.
+            start1_hard (int): Step when negative mixing type 1 begins.
+            start2_hard (int): Step when negative mixing type 2 begins.
         """
 
         super(MoCo, self).__init__()

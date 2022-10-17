@@ -70,7 +70,7 @@ python train_contrastive.py OPTIONS
     -dd, --dir_data         Path to directory where the Caltech256 dataset 
                             wil be stored.
 
-    -do, --dir_out          Path to directory where logs & checkpoints wil 
+    -do, --dir_out          Path to directory where logs & checkpoints will 
                             be stored.    
 
     -i, --img_size          Image size for training.      
