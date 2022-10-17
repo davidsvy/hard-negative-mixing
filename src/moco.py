@@ -18,6 +18,21 @@ class MoCo(nn.Module):
             self, encoder, dim=128, K=2 ** 12, m=0.999, T=0.07, n_hard=32,
             s1_hard=16, s2_hard=16, start1_hard=2 ** 10, start2_hard=2 ** 11,
     ):
+        """Initializes MoCo object.
+
+        Args:
+            encoder (nn.Module): Model used as encoder.
+            dim (int): Output dimension.
+            K (int): Length of queue.
+            m (float): Exponential moving average weight.
+            T (float): Temperature.
+            n_hard (int): Number of most difficult negatives to consider for each query.
+            s1_hard (int): Number of type 1 synthetic negatives to create for each query.
+            s2_hard (int): Number of type 2 synthetic negatives to create for each query.
+            start1_hard (int): Step when nexative mixing type 1 begins.
+            start2_hard (int): Step when nexative mixing type 2 begins.
+        """
+
         super(MoCo, self).__init__()
 
         self.K, self.m, self.T = K, m, T
@@ -93,7 +108,15 @@ class MoCo(nn.Module):
         return out_k
 
     def find_hard_negatives(self, logits):
-        # logits -> [batch_size, len_queue + 1]
+        """Finds the top n_hard hardest negatives in the queue for the query.
+
+        Args:
+            logits (torch.tensor)[batch_size, len_queue]: Output dot product negative logits.
+
+        Returns:
+            torch.tensor[batch_size, n_hard]]: Indices in the queue.
+        """
+        # logits -> [batch_size, len_queue]
         _, idxs_hard = torch.topk(
             logits.clone().detach(), k=self.n_hard, dim=-1, sorted=False)
         # idxs_hard -> [batch_size, n_hard]
@@ -101,6 +124,18 @@ class MoCo(nn.Module):
         return idxs_hard
 
     def hard_negatives1(self, out_q, logits, idxs_hard):
+        """Concats type 1 hard negatives to logits.
+
+        Args:
+            out_q (torch.tensor)[batch_size, d_out]: Output of query encoder.
+            logits (torch.tensor)[batch_size, len_queue + ...]: Output dot product logits.
+            idxs_hard (torch.tensor)[batch_size, n_hard]: Indices of hardest negatives
+                in the queue for each query.
+
+        Returns:
+            (torch.tensor)[batch_size, len_queue + ... + s1_hard]: logits concatenated with 
+                type 1 hard negatives.
+        """
         # out_q -> [batch_size, d_out]
         # logits -> [batch_size, len_queue + ...]
         # idxs_hard -> [batch_size, n_hard]
@@ -132,6 +167,18 @@ class MoCo(nn.Module):
         return logits
 
     def hard_negatives2(self, out_q, logits, idxs_hard):
+        """Concats type 2 hard negatives to logits.
+
+        Args:
+            out_q (torch.tensor)[batch_size, d_out]: Output of query encoder.
+            logits (torch.tensor)[batch_size, len_queue + ...]: Output dot product logits.
+            idxs_hard (torch.tensor)[batch_size, n_hard]: Indices of hardest negatives
+                in the queue for each query.
+
+        Returns:
+            (torch.tensor)[batch_size, len_queue + ... + s2_hard]: logits concatenated with 
+                type 2 hard negatives.
+        """
         # out_q -> [batch_size, d_out]
         # logits -> [batch_size, len_queue + ...]
         # idxs_hard -> [batch_size, n_hard]
@@ -163,6 +210,18 @@ class MoCo(nn.Module):
         return logits
 
     def forward(self, q, k, step, file_idxs=None):
+        """Forward pass.
+
+        Args:
+            q (torch.tensor)[batch_size, n_channels, height, width]: Input query.
+            k (torch.tensor)[batch_size, n_channels, height, width]: Input key.
+            step (int): Training step. Necessary for curriculum.
+            file_idxs (torch.tensor)[batch_size]: Indices of training samples.
+
+        Returns:
+            (torch.tensor)[batch_size, len_queue + 1 + ...]: Logits.
+            (torch.tensor)[batch_size]: Labels.
+        """
         # q, k -> [batch_size, n_channels, height, width]
         # file_idxs -> [batch_size]
         batch_size, device = q.shape[0], q.device
