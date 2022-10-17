@@ -1,0 +1,5 @@
+numpy==1.21.6
+termcolor==2.0.1
+timm==0.6.11
+torch==1.12.1+cu113
+torchvision==0.13.1+cu113
