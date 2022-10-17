@@ -39,7 +39,7 @@ def save_checkpoint(args, step, model, optimizer, lr_scheduler, logger):
         'args': args,
     }
 
-    save_path = os.path.join(args.put, f'ckpt_{step}.pth')
+    save_path = os.path.join(args.dir_out, f'ckpt_{step}.pth')
     logger.info('#' * 60)
     logger.info(f'{save_path} saving...')
     torch.save(save_state, save_path)

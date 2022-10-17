@@ -33,12 +33,12 @@ def main():
     if args.resume:
         assert os.path.isfile(args.resume)
 
-    os.makedirs(args.out, exist_ok=True)
-    logger = create_logger(args.out)
+    os.makedirs(args.dir_out, exist_ok=True)
+    logger = create_logger(args.dir_out)
 
     device = get_device(args=args, logger=logger)
 
-    path_args = os.path.join(args.out, 'args.yaml')
+    path_args = os.path.join(args.dir_out, 'args.yaml')
     with open(path_args, 'w') as file_args:
         json.dump(args.__dict__, file_args, indent=2)
 
@@ -120,7 +120,7 @@ def train_one_epoch(
             param.grad = None
 
         batch = batch.to(device)
-        file_idxs = file_idxs.to(file_idxs)
+        file_idxs = file_idxs.to(device)
 
         q, k = transform(batch)
         outputs, labels = model(

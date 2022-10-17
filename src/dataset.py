@@ -15,7 +15,8 @@ class Dataset_Contrastive(torchvision.datasets.Caltech256):
             f'{self.y[idx] + 1:03d}_{self.index[idx]:04d}.jpg',
         )
 
-        image = torchvision.io.read_image(path) / 255.0
+        image = torchvision.io.read_image(
+            path, mode=torchvision.io.ImageReadMode.RGB) / 255.0
 
         image1 = self.transform(image)
         image2 = self.transform(image)
@@ -31,7 +32,7 @@ def build_loader(args):
     transform = transform_inner_train(crop_size=args.img_size)
 
     dataset = Dataset_Contrastive(
-        root=args.root,
+        root=args.dir_data,
         transform=transform,
         download=True,
     )

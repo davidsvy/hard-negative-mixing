@@ -216,6 +216,8 @@ class MoCo(nn.Module):
 
 
 def build_moco(args):
+    assert args.k_moco % args.batch_size == 0
+
     encoder = build_model(
         arch=args.arch,
         n_classes=args.dim_moco,
@@ -229,10 +231,10 @@ def build_moco(args):
         m=args.m_moco,
         T=args.t_moco,
         n_hard=args.n_hard,
-        s1_hard=args.s1_hard, 
+        s1_hard=args.s1_hard,
         s2_hard=args.s2_hard,
         start1_hard=args.start1_hard,
-        start2_hard=args.start2_hard,    
+        start2_hard=args.start2_hard,
     )
-    
+
     return moco

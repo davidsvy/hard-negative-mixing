@@ -7,20 +7,21 @@ def parse_args():
 
     # DATA
     parser.add_argument(
-        '--root', '-r', type=str, default='dataset',
+        '--dir_data', '-dd', type=str, default='dataset',
         help='Directory where the dataset will be stored.')
     parser.add_argument(
-        '--out', '-o', type=str, default='dataset',
+        '--dir_out', '-do', type=str, default='out',
         help='Directory where the output will be stored.')
     parser.add_argument(
         '--img_size', '-i', type=int, default=224,
         help='Image resolution.')
+
     # TRAINING
     parser.add_argument(
-        '--steps', '-s', type=int, default=50000,
+        '--steps', '-s', type=int, default=25000,
         help='Number of training steps.')
     parser.add_argument(
-        '--batch_size', '-bs', type=int, default=128,
+        '--batch_size', '-bs', type=int, default=64,
         help='Batch size for training.')
     parser.add_argument(
         '--steps_save', '-ss', type=int, default=1000,
@@ -35,13 +36,13 @@ def parse_args():
         '--device', '-d', type=int, default=None,
         help='GPU id. If cuda is available default is gpu 0, else cpu.')
     parser.add_argument(
-        '--lr_base', '-lrb', type=float, default=4e-4,
+        '--lr_base', '-lrb', type=float, default=2e-4,
         help='Base learning rate.')
     parser.add_argument(
-        '--lr_warmup', '-lrw', type=float, default=5e-7,
+        '--lr_warmup', '-lrw', type=float, default=2.5e-7,
         help='Warmup learning rate.')
     parser.add_argument(
-        '--lr_min', '-lrm', type=float, default=5e-6,
+        '--lr_min', '-lrm', type=float, default=2.5e-6,
         help='Min learning rate.')
     parser.add_argument(
         '--clip_grad', '-cg', type=float, default=5.0,
@@ -76,10 +77,10 @@ def parse_args():
         '--s2_hard', '-s2h', type=int, default=16,
         help='Number of type 2 hard negatives created for each sample.')
     parser.add_argument(
-        '--start1_hard', '-st1h', type=int, default=10000,
+        '--start1_hard', '-st1h', type=int, default=5000,
         help='When to begin type 1 hard negative mixing.')
     parser.add_argument(
-        '--start2_hard', '-st2h', type=int, default=20000,
+        '--start2_hard', '-st2h', type=int, default=10000,
         help='When to begin type 2 hard negative mixing.')
 
     args = parser.parse_args()
